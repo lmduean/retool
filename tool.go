@@ -18,7 +18,9 @@ type tool struct {
 }
 
 func (t *tool) path() string {
-	return filepath.Join(toolDirPath, "src", t.Repository)
+	//return filepath.Join(toolDirPath, "src", t.Repository)
+	// LMD: use system GOPATH
+	return filepath.Join(sysGoPath, "src", t.Repository)
 }
 
 func (t *tool) executable() string {
@@ -47,10 +49,23 @@ func setEnvVar(cmd *exec.Cmd, key, val string) {
 	cmd.Env = env
 }
 
+func setDefaultEnvVar(cmd *exec.Cmd) {
+	var env []string
+	if cmd.Env != nil {
+		env = cmd.Env
+	} else {
+		env = os.Environ()
+	}
+
+	cmd.Env = env
+}
+
 func get(t *tool) error {
 	log("downloading " + t.Repository)
 	cmd := exec.Command("go", "get", "-d", t.Repository)
-	setEnvVar(cmd, "GOPATH", toolDirPath)
+	//setEnvVar(cmd, "GOPATH", toolDirPath)
+	// LMD: use system GOPATH
+	setDefaultEnvVar(cmd)
 	_, err := cmd.Output()
 	if err != nil {
 		return errors.Wrap(err, "failed to 'go get' tool")
@@ -126,7 +141,9 @@ func setVersion(t *tool) error {
 
 	// Re-run 'go get' in case the new version has a different set of dependencies.
 	cmd = exec.Command("go", "get", "-d", t.Repository)
-	setEnvVar(cmd, "GOPATH", toolDirPath)
+	//setEnvVar(cmd, "GOPATH", toolDirPath)
+	// LMD: use system GOPATH
+	setDefaultEnvVar(cmd)
 	_, err = cmd.Output()
 	if err != nil {
 		return errors.Wrap(err, "failed to 'go get' tool")
@@ -151,7 +168,9 @@ func download(t *tool) error {
 func install(t *tool) error {
 	log("installing " + t.Repository)
 	cmd := exec.Command("go", "install", t.Repository)
-	setEnvVar(cmd, "GOPATH", toolDirPath)
+	//setEnvVar(cmd, "GOPATH", toolDirPath)
+	// LMD: use system GOPATH
+	setDefaultEnvVar(cmd)
 	_, err := cmd.Output()
 	if err != nil {
 		return errors.Wrap(err, "failed to 'go install' tool")

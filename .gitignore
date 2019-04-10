@@ -1,2 +1,7 @@
 *.test
 /retool
+
+# my cscope related files
+/cscope*
+/gencscope.out.sh
+/tags

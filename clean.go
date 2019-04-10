@@ -19,6 +19,13 @@ func (ss stringSet) has(val string) bool {
 // compute the set of dependencies for a list of packages. The packages must
 // already be present in toolDirPath.
 func dependencies(pkgs []string) stringSet {
+
+	/*prevGoPath := os.Getenv("GOPATH")
+	if prevGoPath == "" {
+		prevGoPath = filepath.Join(os.Getenv("HOME"), "go")
+	}
+	verbosef("system GOPATH: %v\n", prevGoPath)*/
+
 	deps := stringSet{}
 
 	buildCtx := build.Default

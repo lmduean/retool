@@ -28,6 +28,7 @@ var (
 	// These globals are set by ensureTooldir() after factoring in the flags above.
 	baseDirPath string
 	toolDirPath string
+	sysGoPath   string
 )
 
 // If the working directory is within a git repository, return the path of the repository's root; otherwise, return the
@@ -48,6 +49,9 @@ func getRepoRoot() (string, error) {
 	return repoRoot, nil
 }
 
+// LMD: If no passing -base-dir and -tool-dir to retool,
+//      then base-dir is git repo dir or current working dir,
+//      and tool-dir is base-dir/_tools.
 func ensureTooldir() error {
 	var err error
 
@@ -73,8 +77,15 @@ func ensureTooldir() error {
 		toolDirPath = filepath.Join(baseDirPath, toolDirName)
 	}
 
+	prevGoPath := os.Getenv("GOPATH")
+	if prevGoPath == "" {
+		prevGoPath = filepath.Join(os.Getenv("HOME"), "go")
+	}
+	sysGoPath = prevGoPath
+
 	verbosef("base dir: %v\n", baseDirPath)
 	verbosef("tool dir: %v\n", toolDirPath)
+	verbosef("system GOPATH: %v\n", sysGoPath)
 
 	stat, err := os.Stat(toolDirPath)
 	switch {

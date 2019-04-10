@@ -29,6 +29,7 @@ func (s spec) sync() {
 		s.build()
 
 		// Delete unneccessary source files
-		s.cleanup()
+		// TODO(LMD): enable cleanup
+		//s.cleanup()
 	}
 }

@@ -18,7 +18,7 @@ func main() {
 	cmd, tool := parseArgs()
 
 	if cmd == "version" {
-		fmt.Fprintf(os.Stdout, "retool %s", version)
+		fmt.Fprintf(os.Stdout, "retool %s(modified by lmduean)\n", version)
 		os.Exit(0)
 	}
 
